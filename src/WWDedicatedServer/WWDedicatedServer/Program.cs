@@ -1,0 +1,128 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using WWDedicatedServer.API;
+using WWDedicatedServer.CommandSystem;
+using WWDedicatedServer.Network;
+
+namespace WWDedicatedServer;
+
+public class Program
+{
+	public static List<ServerModule> Modules = new List<ServerModule>();
+
+	private static void Main(string[] args)
+	{
+		int maxplayers = 4;
+		int port = 7777;
+		bool autoStart = false;
+
+		if (args != null && args.Length > 0)
+		{
+			autoStart = true;
+			for (int i = 0; i < args.Length; i++)
+			{
+				string arg = args[i].ToLower();
+				if (arg == "--auto" || arg == "-auto" || arg == "/auto")
+				{
+					// Keep defaults: 4 players, port 7777
+				}
+				else if (i == 0 && int.TryParse(arg, out var p))
+				{
+					maxplayers = ((p > 10) ? 10 : ((p <= 0) ? 1 : p));
+				}
+				else if (i == 1 && int.TryParse(arg, out var prt))
+				{
+					port = ((prt > 9999) ? 9999 : ((prt <= 0) ? 7777 : prt));
+				}
+			}
+		}
+
+		if (!autoStart)
+		{
+			Logger.Info("SERVER", "ENTER MAX PLAYERS [DEFAULT 4 MAX 10] (Pressione ENTER para padrão 4)");
+			string line1 = Console.ReadLine();
+			if (!string.IsNullOrEmpty(line1) && int.TryParse(line1, out var result))
+			{
+				maxplayers = ((result > 10) ? 10 : ((result <= 0) ? 1 : result));
+			}
+
+			Logger.Info("SERVER", "ENTER SERVER PORT [DEFAULT 7777 MAX 9999] (Pressione ENTER para padrão 7777)");
+			string line2 = Console.ReadLine();
+			if (!string.IsNullOrEmpty(line2) && int.TryParse(line2, out var result2))
+			{
+				port = ((result2 > 9999) ? 9999 : ((result2 <= 0) ? 7777 : result2));
+			}
+		}
+
+		Server.Start(maxplayers, port);
+		CommandProcessor.RegisterCommands();
+		LoadModules();
+		while (!Server.StopTheServer)
+		{
+			string cmds = Console.ReadLine();
+			if (!string.IsNullOrEmpty(cmds))
+			{
+				CommandProcessor.ProcessCommand(cmds);
+			}
+			else
+			{
+				System.Threading.Thread.Sleep(100);
+			}
+		}
+	}
+
+	private static void LoadModules()
+	{
+		string directoryName = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+		string text = Path.Combine(directoryName, "ServerModules");
+		Logger.Info("MODULE_LOADER", "MODULES PATH: " + text);
+		if (!Directory.Exists(text))
+		{
+			Directory.CreateDirectory(text);
+		}
+		string[] files = Directory.GetFiles(text);
+		foreach (string text2 in files)
+		{
+			if (text2.EndsWith(".dll"))
+			{
+				Logger.Info("MODULE_LOADER", text2);
+				LoadModuleAssembly(text2);
+			}
+		}
+	}
+
+	private static void LoadModuleAssembly(string path)
+	{
+		Assembly assembly = Assembly.LoadFrom(path);
+		try
+		{
+			Type[] types = assembly.GetTypes();
+			foreach (Type type in types)
+			{
+				if (type.IsSubclassOf(typeof(ServerModule)) && type != typeof(ServerModule))
+				{
+					try
+					{
+						ServerModule serverModule = (ServerModule)Activator.CreateInstance(type);
+						serverModule.OnEnable();
+						Modules.Add(serverModule);
+						Logger.Info("MODULE_LOADER", "Plugin loaded: " + serverModule.Name.ToString());
+					}
+					catch (Exception ex)
+					{
+						Logger.Error("MODULE_LOADER", ex.Message);
+					}
+				}
+			}
+		}
+		catch (Exception ex2)
+		{
+			Logger.Error("MODULE_LOADER", "Failed to load DLL [" + path + "], is it up to date?");
+			Logger.Error("MODULE_LOADER", ex2.Message);
+			Logger.Error("MODULE_LOADER", ex2.StackTrace);
+		}
+	}
+}
