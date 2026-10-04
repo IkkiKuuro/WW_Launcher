@@ -1,4 +1,4 @@
-# WW Launcher
+﻿# WW Launcher
 
 Um sistema para criar multiplayer em jogos single-player feitos com Unity.
 
@@ -21,6 +21,13 @@ O Ori Coop Plus adiciona multiplayer cooperativo ao **Ori and the Blind Forest:
 Definitive Edition**. O mod possui um modulo cliente, carregado pelo jogo, e um
 modulo servidor, carregado pelo servidor dedicado. Eles devem ser colocados em
 pastas diferentes.
+
+O novo scaffolding do cliente usa BepInEx 5.x em
+[`src/OriCoopPlus/OriCoopBepInEx`](src/OriCoopPlus/OriCoopBepInEx) e target
+estrito `.NET Framework 3.5`. Ele e mantido separado do cliente legado durante
+a migracao. Consulte
+[docs/bepinex-architecture.md](docs/bepinex-architecture.md) antes de integrar
+novos pacotes ou patches.
 
 ## Requisitos
 
@@ -52,16 +59,16 @@ Os caminhos podem ser diferentes conforme a instalacao da Steam.
 Tambem e possivel compilar pelo PowerShell na raiz do repositorio:
 
 ```powershell
+Set-Location 'C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher'
 dotnet build .\src\OriCoopPlus\OriCoopPlus.sln --configuration Release
-dotnet build .\src\WWDedicatedServer\WWDedicatedServer.csproj --configuration Release
+dotnet build .\src\OriCoopDedicatedServer\OriCoopDedicatedServer\OriCoopDedicatedServer.csproj --configuration Release
 ```
 
 Os arquivos gerados ficam em:
 
 ```text
-src\OriCoopPlus\OriCoopClient\bin\Release\net461\ORIDEClientModule.dll
-src\OriCoopPlus\OriCoopServer\bin\Release\netstandard2.0\ORIDEServerModule.dll
-src\WWDedicatedServer\bin\Release\netcoreapp5.0\WWDedicatedServer.exe
+src\OriCoopPlus\OriCoopBepInEx\bin\Release\OriCoopBepInEx.dll
+src\OriCoopDedicatedServer\OriCoopDedicatedServer\bin\Release\net8.0\OriCoopDedicatedServer.exe
 ```
 
 ## 2. Instalar os modulos
@@ -70,32 +77,34 @@ Considere `<ORI_DIR>` como a pasta de instalacao do jogo. Copie os arquivos
 para estes destinos:
 
 ```text
-ORIDEClientModule.dll
-  de: src\OriCoopPlus\OriCoopClient\bin\Release\net461\
-  para: <ORI_DIR>\ClientModules\
+OriCoopBepInEx.dll
+  de: src\OriCoopPlus\OriCoopBepInEx\bin\Release\
+  para: <ORI_DIR>\BepInEx\plugins\
 
-ORIDEServerModule.dll
-  de: src\OriCoopPlus\OriCoopServer\bin\Release\netstandard2.0\
-  para: <ORI_DIR>\Server\ServerModules\
+OriCoopDedicatedServer.Core.dll
+  de: src\OriCoopDedicatedServer\OriCoopDedicatedServer.Core\bin\Release\net8.0\
+  para: <ORI_DIR>\Server\
 ```
 
-O modulo cliente **nao** deve ser colocado em `ServerModules`. Essa pasta deve
-conter somente o modulo do servidor:
+Se o launcher WW tiver instalado a versÃ£o antiga, remova tambÃ©m:
 
 ```text
-<ORI_DIR>\Server\ServerModules\ORIDEServerModule.dll
+<ORI_DIR>\ClientModules\ORIDEClientModule.dll
 ```
+
+Esse cliente legado usa `MPGameManager`/`WWClient` e causa conflito com
+`OriCoopBepInEx.dll`. Os dois clientes nÃ£o devem ser instalados ao mesmo tempo.
 
 Copie tambem o servidor dedicado compilado para `<ORI_DIR>\Server\`. Para
 manter os arquivos correspondentes entre si, copie estes arquivos da pasta
-`src\WWDedicatedServer\bin\Release\netcoreapp5.0\`:
+`src\OriCoopDedicatedServer\OriCoopDedicatedServer\bin\Release\net8.0\`:
 
 ```text
-WWDedicatedServer.exe
-WWDedicatedServer.dll
-WWDedicatedServer.deps.json
-WWDedicatedServer.runtimeconfig.json
-WWDedicatedServer.pdb
+OriCoopDedicatedServer.exe
+OriCoopDedicatedServer.dll
+OriCoopDedicatedServer.deps.json
+OriCoopDedicatedServer.runtimeconfig.json
+OriCoopDedicatedServer.pdb
 ```
 
 Antes de substituir uma DLL, feche o jogo e o servidor. O Windows nao permite
@@ -105,15 +114,15 @@ A estrutura final esperada e:
 
 ```text
 <ORI_DIR>\
-├── ClientModules\
-│   └── ORIDEClientModule.dll
-└── Server\
-    ├── WWDedicatedServer.exe
-    ├── WWDedicatedServer.dll
-    ├── WWDedicatedServer.deps.json
-    ├── WWDedicatedServer.runtimeconfig.json
-    └── ServerModules\
-        └── ORIDEServerModule.dll
+â”œâ”€â”€ BepInEx\
+â”‚   â””â”€â”€ plugins\
+â”‚       â””â”€â”€ OriCoopBepInEx.dll
+â””â”€â”€ Server\
+    â”œâ”€â”€ OriCoopDedicatedServer.exe
+    â”œâ”€â”€ OriCoopDedicatedServer.dll
+    â”œâ”€â”€ OriCoopDedicatedServer.deps.json
+    â”œâ”€â”€ OriCoopDedicatedServer.runtimeconfig.json
+    â””â”€â”€ OriCoopDedicatedServer.Core.dll
 ```
 
 ## 3. Abrir o servidor
@@ -124,7 +133,7 @@ A estrutura final esperada e:
    <ORI_DIR>\Server\
    ```
 
-2. Execute `WWDedicatedServer.exe`.
+2. Execute `OriCoopDedicatedServer.exe`.
 3. Quando for solicitado o numero maximo de jogadores, digite um valor de `1`
    a `10`, ou pressione `Enter` para usar `4`.
 4. Quando for solicitada a porta, digite `7777`, ou pressione `Enter` para
@@ -133,7 +142,7 @@ A estrutura final esperada e:
 
    ```text
    Server started on 7777 maxplayers: 4
-   Plugin loaded: Ori and the Blind Forest: DE - Coop Plus Server
+   Ori Coop Plus Server Module CARREGADO
    ```
 
 6. Mantenha a janela do servidor aberta enquanto estiver jogando.
@@ -142,21 +151,30 @@ Para iniciar automaticamente com 4 jogadores e porta 7777:
 
 ```powershell
 Set-Location "<ORI_DIR>\Server"
-.\WWDedicatedServer.exe --auto
+.\OriCoopDedicatedServer.exe --auto
 ```
 
 Se o arquivo `Iniciar_Servidor.bat` nao estiver configurado para a sua
-instalacao, execute o `WWDedicatedServer.exe` diretamente usando os passos
+instalacao, execute o `OriCoopDedicatedServer.exe` diretamente usando os passos
 acima.
+
+O servidor escuta em todas as interfaces IPv4 e exibe no console as linhas
+`LAN address: <IP>:<porta>`. Para clientes em outros computadores da mesma
+rede, use um desses IPv4s no campo `Host` de
+`BepInEx\config\com.ikkikuuro.oricoop.cfg` e mantenha `Port = 7777`.
+Libere trafego UDP de entrada nessa porta no firewall do computador host.
+Nao ha descoberta automatica de servidores; o IPv4 precisa ser informado
+manualmente.
 
 ## 4. Entrar pelo jogo
 
 1. Inicie o jogo normalmente.
 2. Carregue um save em que o Ori ja esteja controlavel. O multiplayer nao pode
    ser testado no menu ou durante o prologo com a Naru.
-3. O modulo cliente deve carregar automaticamente a partir de `ClientModules`.
-4. Pressione `F8` para abrir o painel **Ori Coop Plus**.
-5. Informe o IP e a porta do servidor. Para um servidor no mesmo computador,
+3. O plugin deve carregar automaticamente a partir de `BepInEx\plugins`.
+4. Confirme `Ori Coop BepInEx` no `BepInEx\LogOutput.log`.
+5. O IP e a porta sao configurados em
+   `BepInEx\config\com.ikkikuuro.oricoop.cfg`. Para um servidor no mesmo computador,
    use:
 
    ```text
@@ -164,15 +182,17 @@ acima.
    Porta: 7777
    ```
 
-6. Clique em **Conectar ao Servidor**.
+6. Carregue um save controlavel para disparar o patch de `SeinCharacter`.
 7. Para testar com outro computador, use o IP do computador que esta
    executando o servidor e libere a porta `7777` no firewall.
 
-No painel F8 e possivel salvar o nick, conectar ou desconectar e ver os
-jogadores conectados. Quando o servidor permitir teleporte, cada jogador tera
-um botao **Teleportar ate <nome>**.
+O painel F8 e o spawn visual de jogadores remotos pertenciam ao cliente legado
+e foram removidos nesta migracao. O recebimento de snapshots e a aplicacao
+visual ainda estao **a confirmar**.
 
-O atalho `T` alterna o teleporte para o proximo jogador disponivel.
+O atalho `T` e o teleporte visual ainda nao estao implementados no cliente
+BepInEx atual. O servidor registra `/tp`, mas o cliente ainda precisa tratar o
+pacote `TELEPORT_REQUEST` para aplicar a posicao recebida.
 
 Por seguranca, todas as opcoes cooperativas iniciam desligadas a cada
 inicializacao do servidor. Para usar um recurso, ative-o explicitamente pelos
@@ -180,7 +200,7 @@ comandos do servidor.
 
 ## 5. Comandos do servidor
 
-Os comandos sao digitados na janela do `WWDedicatedServer.exe`.
+Os comandos sao digitados na janela do `OriCoopDedicatedServer.exe`.
 
 ```text
 /coop
@@ -228,33 +248,29 @@ pode ser escrito como `/teleport`.
 
 ## Solucao de problemas
 
-### O servidor reclama de `UnityEngine`, `WWClient` ou `Assembly-CSharp`
+### O plugin nao aparece no BepInEx
 
-`ORIDEClientModule.dll` foi colocado na pasta errada. Remova-o de:
-
-```text
-<ORI_DIR>\Server\ServerModules\
-```
-
-Coloque-o em:
+Confirme que `OriCoopBepInEx.dll` foi colocado em:
 
 ```text
-<ORI_DIR>\ClientModules\
+<ORI_DIR>\BepInEx\plugins\
 ```
 
-Em `ServerModules` deixe apenas `ORIDEServerModule.dll`.
+O servidor próprio não usa `ServerModules`; remova essa pasta se ela tiver sido
+criada por uma instalação antiga.
 
-### O F8 nao abre
+### O patch nao envia snapshots
 
-- Feche o jogo e substitua novamente `ORIDEClientModule.dll`.
-- Confirme que a DLL esta em `<ORI_DIR>\ClientModules\`.
+- Confirme que o jogo esta em um save no qual `SeinCharacter` exista.
+- Verifique `Host`, `Port` e `PlayerId = -1` no arquivo
+  `BepInEx\config\com.ikkikuuro.oricoop.cfg`.
 - Reinicie o jogo depois da substituicao.
-- Teste dentro de um save em que o Ori esteja controlavel.
-- Verifique se o modulo cliente aparece no log de carregamento do jogo.
+- Verifique o `BepInEx\LogOutput.log` e o console do servidor.
 
 ### O jogador aparece sem nome
 
-- Confirme que o servidor e o `ORIDEServerModule.dll` foram atualizados juntos.
+- Confirme que o `OriCoopDedicatedServer.exe` e o
+  `OriCoopDedicatedServer.Core.dll` vieram do mesmo build.
 - Use `/coop names on` no servidor.
 - Reconecte os jogadores depois de alterar a configuracao.
 
@@ -272,4 +288,4 @@ F8 novamente.
 ### O Windows nao deixa copiar a DLL
 
 O jogo ou o servidor ainda esta usando o arquivo. Feche `OriDE.exe` e
-`WWDedicatedServer.exe` pelo Gerenciador de Tarefas e tente copiar novamente.
+`OriCoopDedicatedServer.exe` pelo Gerenciador de Tarefas e tente copiar novamente.

@@ -31,9 +31,18 @@ O servidor usa UDP. O primeiro inteiro do pacote identifica o cliente; valores
 negativos iniciam tentativa de conexao. O servidor valida o endpoint UDP antes
 de encaminhar dados ao cliente associado.
 
+A implementação oficial desse transporte pertence ao
+`OriCoopDedicatedServer.Core`. O protocolo permanece compatível com o cliente
+BepInEx atual, mas não depende de infraestrutura, namespaces ou assemblies do
+WW. O executável próprio inicializa diretamente as regras do Ori, sem carregar
+módulos externos.
+
 O servidor aceita uma porta configuravel, com padrao `7777`, e um maximo
 configuravel de jogadores, limitado pelo programa entre `1` e `10`. O cliente
-padrao aponta para `127.0.0.1:7777`.
+padrão aponta para `127.0.0.1:7777`. O dedicado vincula o listener a
+`IPAddress.Any` em IPv4, portanto aceita clientes na mesma rede local pelas
+interfaces de rede disponíveis. O endereço LAN nao e descoberto pelo
+protocolo; cada cliente deve configurar manualmente o IPv4 do host.
 
 ## Configuracao distribuida
 

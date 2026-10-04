@@ -19,6 +19,11 @@ para outros jogos.
 - Use [mapa de entradas do jogo](game-entry-map.md) para consultar habilidades,
   teleporte, pickups, alvos de combate, portas, alavancas e lacunas de
   cobertura.
+- Consulte [scaffolding BepInEx](bepinex-architecture.md) para a arquitetura do
+  novo plugin, suas camadas e os pontos ainda dependentes de confirmação no
+  `Assembly-CSharp`.
+- Consulte [arquitetura](architecture.md) para a separação do
+  `OriCoopDedicatedServer` e a ausência de dependência do WW.
 
 ## Escopo e confiabilidade
 

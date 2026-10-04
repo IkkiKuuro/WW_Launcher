@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using OriCoop;
-using WWDedicatedServer;
-using WWDedicatedServer.Network;
+using OriCoopDedicatedServer.Core;
+using OriCoopDedicatedServer.Core.Network;
 
 namespace ORIDEServerModule
 {
@@ -150,3 +150,4 @@ namespace ORIDEServerModule
         }
     }
 }
+

@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using ORIDEServerModule.Commands;
-using WWDedicatedServer.API;
-using WWDedicatedServer.CommandSystem;
-using WWDedicatedServer.Network;
+using OriCoopDedicatedServer.Core.API;
+using OriCoopDedicatedServer.Core.CommandSystem;
+using OriCoopDedicatedServer.Core.Network;
 
 namespace ORIDEServerModule
 {
@@ -30,7 +30,7 @@ namespace ORIDEServerModule
             Info("==========================================");
             Info(" Ori Coop Plus Server Module CARREGADO!");
             Info(" Recursos ativos: Teleporte, Habilidades, Mundo, Nomes.");
-            Info(" Digite /coop para ver as opções ou /dummy para bot de testes.");
+            Info(" Digite /coop para ver as opÃ§Ãµes ou /dummy para bot de testes.");
             Info("==========================================");
         }
 
@@ -51,3 +51,4 @@ namespace ORIDEServerModule
         }
     }
 }
+

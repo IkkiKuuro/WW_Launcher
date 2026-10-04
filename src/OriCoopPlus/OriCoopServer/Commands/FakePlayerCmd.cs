@@ -1,5 +1,5 @@
-using System.Collections.Generic;
-using WWDedicatedServer.CommandSystem;
+﻿using System.Collections.Generic;
+using OriCoopDedicatedServer.Core.CommandSystem;
 
 namespace ORIDEServerModule.Commands
 {
@@ -12,8 +12,9 @@ namespace ORIDEServerModule.Commands
         public bool Execute(List<string> arguments, out string response)
         {
             DummyManager.Toggle();
-            response = $"[FakePlayer / Dummy] Bot de testes agora está: {(DummyManager.IsActive ? "ATIVO (ID 999 - 'Bot_Amigo')" : "DESATIVADO")}. Use /dummy para mais opções.";
+            response = $"[FakePlayer / Dummy] Bot de testes agora estÃ¡: {(DummyManager.IsActive ? "ATIVO (ID 999 - 'Bot_Amigo')" : "DESATIVADO")}. Use /dummy para mais opÃ§Ãµes.";
             return true;
         }
     }
 }
+

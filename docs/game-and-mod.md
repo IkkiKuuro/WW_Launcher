@@ -33,8 +33,9 @@ jogo. Os nomes acima sao o vocabulario observado nas classes
 
 As opcoes sao controladas pelo servidor e enviadas para os clientes:
 
-- **Teleporte**: permite pedir o teleporte ate outro jogador; o atalho local e
-  `T`, e a interface tambem pode oferecer um botao por jogador.
+- **Teleporte**: `/tp <origem> <destino>` e a tecla `T` usam o mesmo fluxo
+  servidor-autoritativo. A tecla `T` escolhe o jogador remoto mais proximo
+  conhecido pelo cliente e o servidor devolve a ultima posicao recebida.
 - **Habilidades**: distribui eventos de habilidades suportadas.
 - **Story only**: subopcao de compartilhamento relacionada ao progresso de
   historia; o efeito exato deve ser validado no fluxo de patches.
@@ -42,7 +43,9 @@ As opcoes sao controladas pelo servidor e enviadas para os clientes:
 - **Doors and levers**: compartilha portas e alavancas.
 - **Nomes**: habilita floating name tags dos jogadores.
 - **Client colors**: alterna cores personalizadas no servidor.
-- **Entity sync**: alterna a sincronizacao de entidades adicionais.
+- **Entity sync**: alterna a sincronizacao de entidades adicionais e entrega
+  o estado ao cliente pela variavel de rede `ES`; a cobertura concreta de
+  inimigos e objetos do mundo ainda esta **a confirmar**.
 
 Todas as opcoes cooperativas sao inicializadas desligadas em
 `ORIDEServerModule.OnEnable`. Isso e intencional para evitar que um servidor

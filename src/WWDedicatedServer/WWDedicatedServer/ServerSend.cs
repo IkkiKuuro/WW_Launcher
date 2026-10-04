@@ -40,7 +40,7 @@ public static class ServerSend
 
 	public static void SendToAll(Packet packet)
 	{
-		for (int i = 0; i <= Server.MaxPlayers; i++)
+		for (int i = 0; i < Server.MaxPlayers; i++)
 		{
 			Server.Clients[i].udp.SendData(packet);
 		}
@@ -53,7 +53,7 @@ public static class ServerSend
 			SendToAll(packet);
 			return;
 		}
-		for (int i = 0; i <= Server.MaxPlayers; i++)
+		for (int i = 0; i < Server.MaxPlayers; i++)
 		{
 			if (i != IgnoreClient)
 			{

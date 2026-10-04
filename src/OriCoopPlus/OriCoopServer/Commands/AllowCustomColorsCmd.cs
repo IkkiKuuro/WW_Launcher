@@ -1,5 +1,5 @@
-using System.Collections.Generic;
-using WWDedicatedServer.CommandSystem;
+﻿using System.Collections.Generic;
+using OriCoopDedicatedServer.Core.CommandSystem;
 
 namespace ORIDEServerModule.Commands
 {
@@ -17,3 +17,4 @@ namespace ORIDEServerModule.Commands
         }
     }
 }
+

@@ -4,18 +4,10 @@
 
 | Caminho | Papel |
 | --- | --- |
-| `src/OriCoopPlus/OriCoopClient/ORIDEClientModule.cs` | ponto de entrada do cliente, settings e Harmony |
-| `src/OriCoopPlus/OriCoopClient/MPGameManager.cs` | estado multiplayer, callbacks e leitura de pacotes |
-| `src/OriCoopPlus/OriCoopClient/OriMPPlayer.cs` | representacao de jogador remoto |
-| `src/OriCoopPlus/OriCoopClient/UI/CoopHUD.cs` | HUD/painel F8 |
-| `src/OriCoopPlus/OriCoopClient/UI/FloatingNameTag.cs` | nomes sobre jogadores |
-| `src/OriCoopPlus/OriCoopClient/Sync/PlayerPos.cs` | dados de posicao |
-| `src/OriCoopPlus/OriCoopClient/Sync/EntitySync.cs` | sincronizacao adicional de entidades |
-| `src/OriCoopPlus/OriCoopClient/Sync/WorldSyncManager.cs` | portas, alavancas e eventos do mundo |
-| `src/OriCoopPlus/OriCoopClient/Data/SeinPickupMPProcessor.cs` | interceptacao de pickups |
-| `src/OriCoopPlus/OriCoopClient/Data/SeinSpiritMP.cs` | comportamento multiplayer do Spirit |
-| `src/OriCoopPlus/OriCoopClient/Data/SeinStompMP.cs` | comportamento multiplayer do Stomp |
-| `src/OriCoopPlus/OriCoopClient/Patches/` | patches Harmony sobre o jogo |
+| `src/OriCoopPlus/OriCoopBepInEx/Plugin/OriCoopPlugin.cs` | ponto de entrada BepInEx, configuracao e ciclo de vida |
+| `src/OriCoopPlus/OriCoopBepInEx/Domain/` | DTOs e contratos sem dependencia de Unity |
+| `src/OriCoopPlus/OriCoopBepInEx/Networking/NetworkService.cs` | adaptador para o protocolo UDP legado |
+| `src/OriCoopPlus/OriCoopBepInEx/Patches/` | gatilhos Harmony e leitura do estado de Sein |
 | `src/OriCoopPlus/OriCoopServer/OriCoopServerModule.cs` | ponto de entrada do plugin servidor |
 | `src/OriCoopPlus/OriCoopServer/NetworkHandler.cs` | entrada e distribuicao de pacotes |
 | `src/OriCoopPlus/OriCoopServer/ServerConfig.cs` | estado e broadcast de configuracao |
@@ -23,16 +15,17 @@
 | `src/OriCoopPlus/OriCoopServer/DummyManager.cs` | bot e eventos de teste |
 | `src/OriCoopPlus/OriCoopShared/` | contrato cliente-servidor |
 
-## Servidor comum
+## Servidor dedicado próprio
 
 | Caminho | Papel |
 | --- | --- |
-| `src/WWDedicatedServer/WWDedicatedServer/Program.cs` | argumentos, inicializacao e carregamento de plugins |
-| `src/WWDedicatedServer/WWDedicatedServer.Network/Server.cs` | listener UDP e slots |
-| `src/WWDedicatedServer/WWDedicatedServer.Network/Client.cs` | estado de cada cliente |
-| `src/WWDedicatedServer/WWDedicatedServer.Network/Packet.cs` | serializacao de pacotes |
-| `src/WWDedicatedServer/WWDedicatedServer.CommandSystem/` | parser e registro de comandos |
-| `src/WWDedicatedServer/WWDedicatedServer.API/` | API de modulos, eventos e tipos comuns |
+| `src/OriCoopDedicatedServer/OriCoopDedicatedServer/Program.cs` | argumentos e ciclo de vida do servidor |
+| `src/OriCoopDedicatedServer/OriCoopDedicatedServer.Core/Network/Server.cs` | listener UDP e slots |
+| `src/OriCoopDedicatedServer/OriCoopDedicatedServer.Core/Network/Client.cs` | estado de cada cliente |
+| `src/OriCoopDedicatedServer/OriCoopDedicatedServer.Core/Network/Packet.cs` | serializacao de pacotes |
+| `src/OriCoopDedicatedServer/OriCoopDedicatedServer.Core/CommandSystem/` | parser e registro de comandos |
+| `src/OriCoopDedicatedServer/OriCoopDedicatedServer.Core/API/` | API própria, eventos e tipos comuns |
+| `src/OriCoopDedicatedServer/OriCoopDedicatedServer/Game/` | regras, comandos e handlers do Ori compilados no servidor |
 
 ## Fontes de catalogo
 

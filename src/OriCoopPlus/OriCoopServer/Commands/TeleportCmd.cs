@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using OriCoop;
-using WWDedicatedServer.API;
-using WWDedicatedServer.CommandSystem;
-using WWDedicatedServer.Network;
+using OriCoopDedicatedServer.Core.API;
+using OriCoopDedicatedServer.Core.CommandSystem;
+using OriCoopDedicatedServer.Core.Network;
 
 namespace ORIDEServerModule.Commands
 {
@@ -11,7 +11,7 @@ namespace ORIDEServerModule.Commands
     {
         public string Command => "tp";
         public string[] Aliases => new[] { "teleport" };
-        public string Description => "Teleporta um jogador até outro (/tp <origem> <destino>)";
+        public string Description => "Teleporta um jogador atÃ© outro (/tp <origem> <destino>)";
 
         public bool Execute(List<string> arguments, out string response)
         {
@@ -25,7 +25,7 @@ namespace ORIDEServerModule.Commands
             Client destination = FindClient(arguments[1]);
             if (source == null || destination == null)
             {
-                response = "Jogador não encontrado. Use o nick exato ou o ID.";
+                response = "Jogador nÃ£o encontrado. Use o nick exato ou o ID.";
                 return false;
             }
 
@@ -37,7 +37,7 @@ namespace ORIDEServerModule.Commands
 
             if (!NetworkHandler.LastKnownPlayerPositions.TryGetValue(destination.Id, out Vector3 position))
             {
-                response = $"Ainda não existe uma posição recebida para {destination.Nick}.";
+                response = $"Ainda nÃ£o existe uma posiÃ§Ã£o recebida para {destination.Nick}.";
                 return false;
             }
 
@@ -46,7 +46,7 @@ namespace ORIDEServerModule.Commands
             packet.Write(destination.Nick ?? ("Jogador " + destination.Id));
             source.udp.SendData(packet);
 
-            response = $"Teleportando {source.Nick} até {destination.Nick}.";
+            response = $"Teleportando {source.Nick} atÃ© {destination.Nick}.";
             return true;
         }
 
@@ -70,3 +70,4 @@ namespace ORIDEServerModule.Commands
         }
     }
 }
+

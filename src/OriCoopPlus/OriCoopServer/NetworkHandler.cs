@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using OriCoop;
-using WWDedicatedServer;
-using WWDedicatedServer.API;
-using WWDedicatedServer.Network;
+using OriCoopDedicatedServer.Core;
+using OriCoopDedicatedServer.Core.API;
+using OriCoopDedicatedServer.Core.Network;
 
 namespace ORIDEServerModule
 {
@@ -39,7 +39,7 @@ namespace ORIDEServerModule
                     abPacket.Write(abilityId);
                     pl.Send(abPacket);
                 }
-                Logger.Info(pl.Id.ToString(), $"Sincronizadas {UnlockedAbilities.Count} habilidades já desbloqueadas para o novo jogador.");
+                Logger.Info(pl.Id.ToString(), $"Sincronizadas {UnlockedAbilities.Count} habilidades jÃ¡ desbloqueadas para o novo jogador.");
             }
         }
 
@@ -231,3 +231,4 @@ namespace ORIDEServerModule
         }
     }
 }
+

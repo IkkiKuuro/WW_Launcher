@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using WWDedicatedServer.CommandSystem;
+using OriCoopDedicatedServer.Core.CommandSystem;
 
 namespace ORIDEServerModule.Commands
 {
@@ -14,10 +14,10 @@ namespace ORIDEServerModule.Commands
         {
             if (arguments.Count == 0)
             {
-                response = "\n=== Ori Coop Plus - Configurações Atuais ===" +
+                response = "\n=== Ori Coop Plus - ConfiguraÃ§Ãµes Atuais ===" +
                     $"\n [1] Teleporte (/coop tp): {(ServerConfig.AllowTeleport ? "ATIVADO" : "DESATIVADO")}" +
                     $"\n [2] Compartilhar Habilidades (/coop abilities): {(ServerConfig.ShareAbilities ? "ATIVADO" : "DESATIVADO")}" +
-                    $"\n [3] Apenas Habilidades de História (/coop story): {(ServerConfig.ShareStoryOnly ? "ATIVADO" : "DESATIVADO")}" +
+                    $"\n [3] Apenas Habilidades de HistÃ³ria (/coop story): {(ServerConfig.ShareStoryOnly ? "ATIVADO" : "DESATIVADO")}" +
                     $"\n [4] Eventos do Mundo (/coop world): {(ServerConfig.ShareWorldEvents ? "ATIVADO" : "DESATIVADO")}" +
                     $"\n [5] Portas e Alavancas (/coop doors): {(ServerConfig.ShareDoorsAndLevers ? "ATIVADO" : "DESATIVADO")}" +
                     $"\n [6] Nomes Flutuantes (/coop names): {(ServerConfig.ShowNicknames ? "ATIVADO" : "DESATIVADO")}" +
@@ -54,7 +54,7 @@ namespace ORIDEServerModule.Commands
                 case "story":
                 case "storyonly":
                     ServerConfig.ShareStoryOnly = targetState ?? !ServerConfig.ShareStoryOnly;
-                    response = $"Apenas Habilidades de História configurado para: {(ServerConfig.ShareStoryOnly ? "ATIVADO" : "DESATIVADO")}";
+                    response = $"Apenas Habilidades de HistÃ³ria configurado para: {(ServerConfig.ShareStoryOnly ? "ATIVADO" : "DESATIVADO")}";
                     return true;
 
                 case "world":
@@ -80,9 +80,10 @@ namespace ORIDEServerModule.Commands
                     return true;
 
                 default:
-                    response = "Opção inválida. Use: tp, abilities, story, world, doors, names";
+                    response = "OpÃ§Ã£o invÃ¡lida. Use: tp, abilities, story, world, doors, names";
                     return false;
             }
         }
     }
 }
+

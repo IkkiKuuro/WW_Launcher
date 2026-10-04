@@ -5,6 +5,11 @@ Edition** que o Ori Coop Plus já intercepta, sincroniza ou usa como alvo de
 ações. Ele separa o que foi confirmado pelo código do que ainda precisa de
 inspeção das DLLs do jogo ou de teste manual.
 
+O cliente legado foi removido. As entradas abaixo representam o histórico do
+mod e devem ser consideradas **a confirmar** até serem migradas para o plugin
+BepInEx. A cobertura atualmente ativa está limitada aos patches em
+`src/OriCoopPlus/OriCoopBepInEx/Patches`.
+
 ## Legenda de cobertura
 
 - **Implementado**: existe um ponto de entrada no código e um fluxo de
@@ -84,13 +89,14 @@ Há três entradas para o mesmo recurso:
 
 | Entrada | Comportamento |
 | --- | --- |
-| Tecla `T` | Seleciona o próximo jogador remoto ativo e teleporta o Ori local |
-| Botão no HUD | Teleporta até o jogador escolhido |
+| Tecla `T` | **A confirmar**; não há handler no cliente BepInEx atual |
+| Botão no HUD | **A confirmar**; não há HUD de teleporte no cliente BepInEx atual |
 | Comando `/tp <origem> <destino>` ou `/teleport` | O servidor envia ao jogador de origem a última posição conhecida do destino |
 
 O cliente prepara a cena de destino, posiciona `Characters.Sein`, atualiza
 câmera e cenas carregadas e mostra uma notificação. O recurso só funciona
-quando `AllowTeleport` está habilitado pelo servidor.
+quando `AllowTeleport` está habilitado pelo servidor e o cliente tratar o
+pacote `TELEPORT_REQUEST`.
 
 Esse é um teleporte do mod entre jogadores. Não foi localizada uma entrada
 para pontos de teleporte, Spirit Wells, portais ou fast travel nativos do jogo.
@@ -212,4 +218,3 @@ Evidências:
    fases.
 5. Investigar o pacote `SYNC_BREAKABLE`, pois o identificador existe mas o
    produtor/consumidor não aparece no código localizado.
-

@@ -33,9 +33,10 @@ public static class Server
 		Port = _port;
 		Logger.Info("SERVER", "Starting server...");
 		InitializeServerData();
-		_udpListener = new UdpClient(Port);
+		_udpListener = new UdpClient(new IPEndPoint(IPAddress.Any, Port));
 		_udpListener.BeginReceive(UDPReciveCallback, null);
 		Logger.Info("SERVER", $"Server started on {Port} maxplayers: {MaxPlayers}");
+		LogLanAddresses();
 		if (ServerEvents.OnServerStarted != null)
 		{
 			ServerEvents.OnServerStarted();
@@ -114,7 +115,7 @@ public static class Server
 				try
 				{
 					_udpListener.Close();
-					_udpListener = new UdpClient(Port);
+					_udpListener = new UdpClient(new IPEndPoint(IPAddress.Any, Port));
 					_udpListener.BeginReceive(UDPReciveCallback, null);
 					Logger.Info("SERVER", $"UDP listener restarted on {Port}.");
 				}
@@ -166,9 +167,29 @@ public static class Server
 
 	private static void InitializeServerData()
 	{
-		for (int i = 0; i <= MaxPlayers; i++)
+		Clients.Clear();
+		for (int i = 0; i < MaxPlayers; i++)
 		{
 			Clients.Add(i, new Client(i));
+		}
+	}
+
+	private static void LogLanAddresses()
+	{
+		IPAddress[] addresses = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
+		bool foundAddress = false;
+		foreach (IPAddress address in addresses)
+		{
+			if (address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(address))
+			{
+				Logger.Info("SERVER", $"LAN address: {address}:{Port}");
+				foundAddress = true;
+			}
+		}
+
+		if (!foundAddress)
+		{
+			Logger.Warning("SERVER", "No non-loopback IPv4 address was found. Check the network adapter.");
 		}
 	}
 }

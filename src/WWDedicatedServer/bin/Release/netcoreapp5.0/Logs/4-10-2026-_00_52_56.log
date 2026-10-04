@@ -1,0 +1,16 @@
+LOG STARTED!
+[00:52:56] [INFO] [SERVER] Starting server...
+[00:52:56] [INFO] [SERVER] Server started on 7777 maxplayers: 4
+[00:52:56] [INFO] [SERVER] LAN address: 10.242.29.152:7777
+[00:52:56] [INFO] [SERVER] LAN address: 192.168.0.5:7777
+[00:52:56] [INFO] [SERVER] LAN address: 192.168.194.223:7777
+[00:52:56] [INFO] [SERVER] Use one of the IPv4 addresses above in the client's Network.Host setting.
+[00:52:56] [INFO] [MODULE_LOADER] MODULES PATH: C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\WWDedicatedServer\bin\Release\netcoreapp5.0\ServerModules
+[00:53:04] [INFO] [SERVER] Incoming connection from 127.0.0.1:62077...
+[00:53:04] [INFO] [SERVER] 127.0.0.1:62077 connected successfully and is new player: NONICK
+[00:53:11] [ERROR] [CommandProcessor] Command DUMMY not found!
+[00:53:13] [INFO] [H] Command list:
+help - show commands - Aliases: h
+stop - stop the server.. - Aliases: end, exit
+ignore_ip - Ignore ip check (DISABLE THIS NOT RECOMENDED!) - Aliases: ignoreip
+[00:53:29] [ERROR] [CommandProcessor] Command FP not found!

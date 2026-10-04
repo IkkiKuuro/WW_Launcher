@@ -1,6 +1,0 @@
-C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\OriCoopPlus\OriCoopClient\obj\Release\net35\OriCoopClient.csproj.AssemblyReference.cache
-C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\OriCoopPlus\OriCoopClient\obj\Release\net35\OriCoopClient.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\OriCoopPlus\OriCoopClient\obj\Release\net35\OriCoopClient.AssemblyInfoInputs.cache
-C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\OriCoopPlus\OriCoopClient\obj\Release\net35\OriCoopClient.AssemblyInfo.cs
-C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\OriCoopPlus\OriCoopClient\obj\Release\net35\OriCoopClient.csproj.CoreCompileInputs.cache
-C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\OriCoopPlus\OriCoopClient\obj\Release\net35\OriCoopClient.sourcelink.json

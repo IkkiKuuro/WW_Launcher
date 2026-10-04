@@ -1,0 +1,18 @@
+LOG STARTED!
+[00:50:19] [INFO] [SERVER] Starting server...
+[00:50:19] [INFO] [SERVER] Server started on 7777 maxplayers: 4
+[00:50:19] [INFO] [SERVER] LAN address: 10.242.29.152:7777
+[00:50:19] [INFO] [SERVER] LAN address: 192.168.0.5:7777
+[00:50:19] [INFO] [SERVER] LAN address: 192.168.194.223:7777
+[00:50:19] [INFO] [SERVER] Use one of the IPv4 addresses above in the client's Network.Host setting.
+[00:50:19] [INFO] [MODULE_LOADER] MODULES PATH: C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\WWDedicatedServer\bin\Release\netcoreapp5.0\ServerModules
+[00:50:24] [INFO] [SERVER] Incoming connection from 127.0.0.1:64724...
+[00:50:24] [INFO] [SERVER] 127.0.0.1:64724 connected successfully and is new player: NONICK
+[00:50:24] [ERROR] [SERVER] RECIVE UDP CALLBACK ERROR: System.Collections.Generic.KeyNotFoundException: The given key '4' was not present in the dictionary.
+   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
+   at WWDedicatedServer.ServerSend.SendToAll(Packet packet) in C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\WWDedicatedServer\WWDedicatedServer\ServerSend.cs:line 43
+   at WWDedicatedServer.ServerSend.SendChatMessage(String Message) in C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\WWDedicatedServer\WWDedicatedServer\ServerSend.cs:line 70
+   at WWDedicatedServer.Network.ServerHandle.ClientDoneMessage(Client client, Packet packet) in C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\WWDedicatedServer\WWDedicatedServer.Network\ServerHandle.cs:line 49
+   at WWDedicatedServer.Network.ServerHandle.ServerRecive(Client client, Packet packet) in C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\WWDedicatedServer\WWDedicatedServer.Network\ServerHandle.cs:line 29
+   at WWDedicatedServer.Network.Client.UDP.HandleData(Packet packet, Int32 ClientId) in C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\WWDedicatedServer\WWDedicatedServer.Network\Client.cs:line 50
+   at WWDedicatedServer.Network.Server.UDPReciveCallback(IAsyncResult ar) in C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\WWDedicatedServer\WWDedicatedServer.Network\Server.cs:line 73

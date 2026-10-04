@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using WWDedicatedServer.API;
 using WWDedicatedServer.CommandSystem;
@@ -18,6 +19,7 @@ public class Program
 		int maxplayers = 4;
 		int port = 7777;
 		bool autoStart = false;
+		int positionalArgument = 0;
 
 		if (args != null && args.Length > 0)
 		{
@@ -27,15 +29,28 @@ public class Program
 				string arg = args[i].ToLower();
 				if (arg == "--auto" || arg == "-auto" || arg == "/auto")
 				{
-					// Keep defaults: 4 players, port 7777
+					continue;
 				}
-				else if (i == 0 && int.TryParse(arg, out var p))
+				else if ((arg == "--max-players" || arg == "--maxplayers") && i + 1 < args.Length
+					&& int.TryParse(args[++i], out var namedMaxPlayers))
 				{
-					maxplayers = ((p > 10) ? 10 : ((p <= 0) ? 1 : p));
+					maxplayers = ClampMaxPlayers(namedMaxPlayers);
 				}
-				else if (i == 1 && int.TryParse(arg, out var prt))
+				else if (arg == "--port" && i + 1 < args.Length
+					&& int.TryParse(args[++i], out var namedPort))
 				{
-					port = ((prt > 9999) ? 9999 : ((prt <= 0) ? 7777 : prt));
+					port = NormalizePort(namedPort);
+				}
+				else if (int.TryParse(arg, out var positionalValue))
+				{
+					if (positionalArgument++ == 0)
+					{
+						maxplayers = ClampMaxPlayers(positionalValue);
+					}
+					else
+					{
+						port = NormalizePort(positionalValue);
+					}
 				}
 			}
 		}
@@ -49,7 +64,7 @@ public class Program
 				maxplayers = ((result > 10) ? 10 : ((result <= 0) ? 1 : result));
 			}
 
-			Logger.Info("SERVER", "ENTER SERVER PORT [DEFAULT 7777 MAX 9999] (Pressione ENTER para padrão 7777)");
+			Logger.Info("SERVER", "ENTER SERVER PORT [DEFAULT 7777 MAX 65535] (Pressione ENTER para padrão 7777)");
 			string line2 = Console.ReadLine();
 			if (!string.IsNullOrEmpty(line2) && int.TryParse(line2, out var result2))
 			{
@@ -58,6 +73,7 @@ public class Program
 		}
 
 		Server.Start(maxplayers, port);
+		Logger.Info("SERVER", "Use one of the IPv4 addresses above in the client's Network.Host setting.");
 		CommandProcessor.RegisterCommands();
 		LoadModules();
 		while (!Server.StopTheServer)
@@ -72,6 +88,16 @@ public class Program
 				System.Threading.Thread.Sleep(100);
 			}
 		}
+	}
+
+	private static int ClampMaxPlayers(int value)
+	{
+		return ((value > 10) ? 10 : ((value <= 0) ? 1 : value));
+	}
+
+	private static int NormalizePort(int value)
+	{
+		return ((value > 65535) ? 65535 : ((value <= 0) ? 7777 : value));
 	}
 
 	private static void LoadModules()

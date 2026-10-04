@@ -1,5 +1,5 @@
-using System;
-using WWDedicatedServer.Network;
+﻿using System;
+using OriCoopDedicatedServer.Core.Network;
 
 namespace ORIDEServerModule
 {
@@ -46,3 +46,4 @@ namespace ORIDEServerModule
         }
     }
 }
+

@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using OriCoop;
-using WWDedicatedServer;
-using WWDedicatedServer.API;
-using WWDedicatedServer.Network;
+using OriCoopDedicatedServer.Core;
+using OriCoopDedicatedServer.Core.API;
+using OriCoopDedicatedServer.Core.Network;
 
 namespace ORIDEServerModule
 {
@@ -139,7 +139,7 @@ namespace ORIDEServerModule
             packet.Write(direction);
             ServerSend.SendToAll(packet);
 
-            Logger.Info("DUMMY", $"[DUMMY] Enviado teste de alavanca (direção: {direction})!");
+            Logger.Info("DUMMY", $"[DUMMY] Enviado teste de alavanca (direÃ§Ã£o: {direction})!");
             ServerSend.SendChatMessage($"<color=yellow>[Dummy Bot]:</color> Acionou alavanca (dir: {direction})!");
         }
 
@@ -164,3 +164,4 @@ namespace ORIDEServerModule
         }
     }
 }
+

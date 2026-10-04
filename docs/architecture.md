@@ -6,50 +6,54 @@ O Ori Coop Plus e dividido em tres partes:
 
 ```text
 OriDE.exe
-  └─ ClientModules\ORIDEClientModule.dll
-       └─ Harmony + MPGameManager + UI + sincronizacao
+  └─ BepInEx\plugins\OriCoopBepInEx.dll
+       └─ Harmony + NetworkService + patches
 
-WWDedicatedServer.exe
-  └─ Server\ServerModules\ORIDEServerModule.dll
-       └─ comandos + configuracao + handlers do protocolo
+OriCoopDedicatedServer.exe
+  └─ OriCoopDedicatedServer.Core.dll
+       └─ UDP + pacotes + comandos + regras do Ori
 ```
 
-O projeto `WWDedicatedServer` fornece a infraestrutura comum: servidor UDP,
-clientes conectados, pacotes, eventos, carregamento dinamico de modulos e
-comandos de console. O modulo Ori usa essa API sem incluir o executavel do
-servidor dentro da DLL do mod.
+O projeto `OriCoopDedicatedServer` fornece uma infraestrutura própria: servidor
+UDP, clientes conectados, pacotes, eventos e comandos de console. As regras do
+Ori são compiladas no executável próprio; não existe dependência de
+`WWDedicatedServer.dll`, carregamento de `ServerModules` ou API do WW.
 
 ## Projetos
 
 | Projeto | Target | Saida | Responsabilidade |
 | --- | --- | --- | --- |
-| `OriCoopClient` | `.NET Framework 4.6.1` | `ORIDEClientModule.dll` | codigo executado dentro do Ori |
-| `OriCoopServer` | `.NET Standard 2.0` | `ORIDEServerModule.dll` | plugin carregado pelo dedicado |
+| `OriCoopBepInEx` | `.NET Framework 3.5` | `OriCoopBepInEx.dll` | scaffolding do plugin BepInEx 5.x |
+| `OriCoopServer` | `.NET 8.0` | `ORIDEServerModule.dll` | módulo compatível para integração e testes |
 | `OriCoopShared` | arquivos compartilhados | incorporado nos dois modulos | enums, configuracao e contrato comum |
-| `WWDedicatedServer` | `.NET Core 5.0` | `WWDedicatedServer.exe` | transporte UDP, ciclo de vida e console |
+| `OriCoopDedicatedServer.Core` | `.NET 8.0` | `OriCoopDedicatedServer.Core.dll` | transporte UDP, ciclo de vida, API e console |
+| `OriCoopDedicatedServer` | `.NET 8.0` | `OriCoopDedicatedServer.exe` | servidor dedicado independente do WW |
 
 O cliente referencia DLLs instaladas pelo jogo em `oriDE_Data\Managed`. Esses
 caminhos sao configurados atualmente no `.csproj` e precisam ser ajustados
 quando a instalacao do jogo estiver em outro local.
 
+O novo scaffolding BepInEx esta documentado em
+[bepinex-architecture.md](bepinex-architecture.md). Ele e um projeto separado,
+com target estrito `net35`, e nao altera o cliente legado enquanto a migracao
+do servidor e do protocolo nao estiver concluida.
+
 ## Ciclo de inicializacao
 
 ### Cliente
 
-1. O loader do jogo encontra `ORIDEClientModule.dll` em `ClientModules`.
-2. `ORIDEClientModule.OnEnable` carrega ou cria `MPSettings.json`.
-3. O cliente registra callbacks de conexao e recebimento de pacotes.
+1. O BepInEx encontra `OriCoopBepInEx.dll` em `BepInEx\plugins`.
+2. `OriCoopPlugin.Awake` carrega a configuracao BepInEx.
+3. `NetworkService` registra callbacks do `WWClient` e tenta conectar ao servidor.
 4. Harmony aplica os patches do mod.
-5. Um `MPGameManager` persistente e criado com `DontDestroyOnLoad`.
-6. A conexao e a sincronizacao passam a depender do estado do save/cena.
+5. `SeinCharacterPatch` envia snapshots de posicao e animacao.
 
 ### Servidor
 
 1. `Program` escolhe maximo de jogadores e porta.
 2. `Server.Start` abre o listener UDP e cria os slots de clientes.
 3. O servidor registra os comandos de infraestrutura.
-4. DLLs de `ServerModules` sao carregadas por reflexao.
-5. `ORIDEServerModule.OnEnable` zera as opcoes cooperativas, registra handlers
+4. `OriCoopServerModule.OnEnable` zera as opcoes cooperativas, registra handlers
    e registra os comandos do Ori.
 
 ## Estado e responsabilidades

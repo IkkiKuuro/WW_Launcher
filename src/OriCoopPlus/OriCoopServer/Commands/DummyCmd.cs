@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using WWDedicatedServer.CommandSystem;
+using OriCoopDedicatedServer.Core.CommandSystem;
 
 namespace ORIDEServerModule.Commands
 {
@@ -69,7 +69,7 @@ namespace ORIDEServerModule.Commands
                     return true;
 
                 default:
-                    response = "Subcomandos disponíveis: spawn, despawn, status, ability <nome>, lever <left/right>, door";
+                    response = "Subcomandos disponÃ­veis: spawn, despawn, status, ability <nome>, lever <left/right>, door";
                     return false;
             }
         }
@@ -100,3 +100,4 @@ namespace ORIDEServerModule.Commands
         }
     }
 }
+
