@@ -13,6 +13,7 @@ public static class Server
 	public static Dictionary<int, Client> Clients = new Dictionary<int, Client>();
 
 	private static UdpClient _udpListener;
+	private static readonly object _udpListenerLock = new object();
 
 	public static int LatesNetId = 0;
 
@@ -47,7 +48,12 @@ public static class Server
 		{
 			IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
 			byte[] array = _udpListener.EndReceive(ar, ref remoteEP);
-			_udpListener.BeginReceive(UDPReciveCallback, null);
+			if (array == null || array.Length < 4)
+			{
+				Logger.Warning("SERVER", $"Ignored invalid UDP packet from {remoteEP}.");
+				return;
+			}
+
 			Packet packet = new Packet(array);
 			int num = packet.ReadInt();
 			if (num <= -1)
@@ -58,18 +64,69 @@ public static class Server
 					Logger.Warning("SERVER", $"{remoteEP} failed to connect: Server Full!");
 				}
 			}
-			else if (array.Length > 4)
+			else if (Clients.TryGetValue(num, out Client client))
 			{
-				Client.UDP udp = Clients[num].udp;
-				if (udp.endPoint.ToString() == remoteEP.ToString())
+				Client.UDP udp = client.udp;
+				if (udp.endPoint != null && udp.endPoint.Equals(remoteEP))
 				{
 					udp.HandleData(packet, num);
 				}
 			}
+			else
+			{
+				Logger.Warning("SERVER", $"Ignored packet with unknown client ID {num} from {remoteEP}.");
+			}
+		}
+		catch (SocketException ex) when (ex.SocketErrorCode == SocketError.ConnectionReset)
+		{
+			Logger.Warning("SERVER", "A UDP client connection was reset; continuing to listen.");
 		}
 		catch (Exception arg)
 		{
 			Logger.Error("SERVER", $"RECIVE UDP CALLBACK ERROR: {arg}");
+		}
+		finally
+		{
+			BeginReceiveOrRestart();
+		}
+	}
+
+	private static void BeginReceiveOrRestart()
+	{
+		lock (_udpListenerLock)
+		{
+			if (_udpListener == null)
+			{
+				return;
+			}
+
+			try
+			{
+				_udpListener.BeginReceive(UDPReciveCallback, null);
+			}
+			catch (ObjectDisposedException)
+			{
+				// The server is shutting down.
+			}
+			catch (SocketException ex) when (ex.SocketErrorCode == SocketError.ConnectionReset)
+			{
+				Logger.Warning("SERVER", "UDP listener was reset; recreating it.");
+				try
+				{
+					_udpListener.Close();
+					_udpListener = new UdpClient(Port);
+					_udpListener.BeginReceive(UDPReciveCallback, null);
+					Logger.Info("SERVER", $"UDP listener restarted on {Port}.");
+				}
+				catch (Exception restartException)
+				{
+					Logger.Error("SERVER", $"FAILED TO RECREATE UDP LISTENER: {restartException}");
+				}
+			}
+			catch (SocketException ex)
+			{
+				Logger.Error("SERVER", $"FAILED TO RESTART UDP RECEIVE: {ex}");
+			}
 		}
 	}
 

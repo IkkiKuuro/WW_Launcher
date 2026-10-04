@@ -8,6 +8,13 @@ Discord: https://discord.gg/F2sHzGC3kb
 
 Download: https://github.com/zheka-100500/WW_Launcher/raw/main/Launcher.zip
 
+## Documentacao
+
+A documentacao tecnica e de operacao fica em [`docs/`](docs/README.md). Ela
+tambem registra o contexto conhecido do jogo e do mod, o protocolo de
+sincronizacao, a organizacao do codigo e os pontos que ainda precisam ser
+confirmados em testes.
+
 ## Ori Coop Plus
 
 O Ori Coop Plus adiciona multiplayer cooperativo ao **Ori and the Blind Forest:
