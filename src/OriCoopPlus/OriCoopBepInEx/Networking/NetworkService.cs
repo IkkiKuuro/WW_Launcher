@@ -17,6 +17,8 @@ namespace OriCoopBepInEx.Networking
         private const int AnimationPacket = (int)PacketType.ANIM;
         private const int ChatPacket = -5;
         private const int NetworkVariablePacket = -3;
+        private const int PingPacket = -7;
+        private const long PingIntervalTicks = TimeSpan.TicksPerSecond * 2;
 
         private readonly UdpClient _client;
         private readonly IPEndPoint _server;
@@ -24,13 +26,17 @@ namespace OriCoopBepInEx.Networking
         private Thread _receiveThread;
         private bool _running;
         private int _assignedId = -1;
+        private readonly string _nickname;
+        private long _lastPingSentTicks;
 
         public event Action<PlayerSnapshot> PlayerSnapshotReceived;
         public event Action<Vector3Data, string> TeleportRequested;
         public event Action<string, string> ChatMessageReceived;
         public event Action<bool> EntitySyncChanged;
+        public event Action<int> PingUpdated;
+        public event Action<string, int> IdentityAssigned;
 
-        public NetworkService(string host, int port, int playerId)
+        public NetworkService(string host, int port, int playerId, string nickname)
         {
             if (string.IsNullOrEmpty(host))
             {
@@ -60,6 +66,7 @@ namespace OriCoopBepInEx.Networking
             }
             _server = new IPEndPoint(serverAddress, port);
             _assignedId = playerId;
+            _nickname = string.IsNullOrEmpty(nickname) ? "NONICK" : nickname.Trim();
         }
 
         public void Start()
@@ -140,10 +147,15 @@ namespace OriCoopBepInEx.Networking
                     {
                         SendConnectionRequest();
                     }
+                    else if (DateTime.UtcNow.Ticks - _lastPingSentTicks >= PingIntervalTicks)
+                    {
+                        SendPing();
+                    }
 
                     byte[] payload = _client.Receive(ref endpoint);
                     ReadServerPacket(payload);
                 }
+
                 catch (SocketException)
                 {
                     // Timeout allows connection retries and shutdown checks.
@@ -160,6 +172,20 @@ namespace OriCoopBepInEx.Networking
                 {
                     // Ignore truncated packets without stopping synchronization.
                 }
+            }
+        }
+
+        private void SendPing()
+        {
+            long sentTicks = DateTime.UtcNow.Ticks;
+            _lastPingSentTicks = sentTicks;
+            using (MemoryStream body = new MemoryStream())
+            using (BinaryWriter writer = new BinaryWriter(body))
+            {
+                writer.Write(PingPacket);
+                writer.Write(sentTicks);
+                writer.Flush();
+                SendEnvelope(body.ToArray());
             }
         }
 
@@ -198,10 +224,28 @@ namespace OriCoopBepInEx.Networking
             using (BinaryReader reader = new BinaryReader(stream))
             {
                 int packetId = reader.ReadInt32();
+                if (packetId == PingPacket)
+                {
+                    long sentTicks = reader.ReadInt64();
+                    int ping = (int)Math.Max(0L, (DateTime.UtcNow.Ticks - sentTicks) / TimeSpan.TicksPerMillisecond);
+                    Action<int> handler = PingUpdated;
+                    if (handler != null)
+                    {
+                        handler(ping);
+                    }
+                    return;
+                }
                 if (packetId == WelcomePacket)
                 {
-                    ReadLegacyString(reader);
+                    string nick = ReadLegacyString(reader);
                     _assignedId = reader.ReadInt32();
+                    SendReady();
+                    Action<string, int> handler = IdentityAssigned;
+                    if (handler != null)
+                    {
+                        handler(nick, _assignedId);
+                    }
+
                     return;
                 }
                 if (packetId == PositionPacket)
@@ -213,7 +257,7 @@ namespace OriCoopBepInEx.Networking
                     reader.ReadByte();
                     reader.ReadByte();
                     snapshot.Animation.FacingLeft = reader.ReadBoolean();
-                    snapshot.Animation.Name = ReadLegacyString(reader);
+                    snapshot.Nick = ReadLegacyString(reader);
                     RaiseSnapshot(snapshot);
                 }
                 else if (packetId == AnimationPacket)
@@ -236,6 +280,7 @@ namespace OriCoopBepInEx.Networking
                         handler(position, destination);
                     }
                 }
+
                 else if (packetId == ChatPacket)
                 {
                     string sender = ReadLegacyString(reader);
@@ -263,6 +308,18 @@ namespace OriCoopBepInEx.Networking
                         }
                     }
                 }
+            }
+        }
+
+        private void SendReady()
+        {
+            using (MemoryStream body = new MemoryStream())
+            using (BinaryWriter writer = new BinaryWriter(body))
+            {
+                writer.Write(-1);
+                writer.Write(_nickname);
+                writer.Flush();
+                SendEnvelope(body.ToArray());
             }
         }
 

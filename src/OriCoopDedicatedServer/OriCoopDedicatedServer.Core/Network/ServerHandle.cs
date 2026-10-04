@@ -14,6 +14,7 @@ public static class ServerHandle
 		{ -2, ReciveNBMessage },
 		{ -4, ReceiveDisconnectMessage },
 		{ -5, ReceiveChatMessage },
+		{ -7, ReceivePingMessage },
 		{ -6, ReceiveRpcMessage }
 	};
 
@@ -67,6 +68,14 @@ public static class ServerHandle
 		{
 			Logger.Error("RPC", $"FAILED TO PROCESS RPC FROM CLIENT {client.Id}! REASON: {arg}");
 		}
+	}
+
+	private static void ReceivePingMessage(Client client, Packet packet)
+	{
+		long sentTicks = packet.ReadLong();
+		Packet response = new Packet(-7);
+		response.Write(sentTicks);
+		client.Send(response);
 	}
 
 	private static void ReceiveChatMessage(Client client, Packet _packet)
@@ -132,4 +141,3 @@ public static class ServerHandle
 		ServerSend.SendToAll(client.Id, packet);
 	}
 }
-

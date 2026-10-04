@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OriCoopServer", "OriCoopServer\OriCoopServer.csproj", "{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OriCoopBepInEx", "OriCoopBepInEx\OriCoopBepInEx.csproj", "{B0B6D54B-0C3C-4ED8-8AE6-E2A7A7A7F3C9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OriCoopDedicatedServer.Core", "..\OriCoopDedicatedServer\OriCoopDedicatedServer.Core\OriCoopDedicatedServer.Core.csproj", "{471744C0-B914-435B-8607-DF3A2480BB74}"
@@ -21,18 +19,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}.Debug|x64.Build.0 = Debug|Any CPU
-		{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}.Debug|x86.Build.0 = Debug|Any CPU
-		{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}.Release|x64.ActiveCfg = Release|Any CPU
-		{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}.Release|x64.Build.0 = Release|Any CPU
-		{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}.Release|x86.ActiveCfg = Release|Any CPU
-		{7F9559BF-4BD8-4DE4-B3C8-73EC6E128319}.Release|x86.Build.0 = Release|Any CPU
 		{B0B6D54B-0C3C-4ED8-8AE6-E2A7A7A7F3C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B0B6D54B-0C3C-4ED8-8AE6-E2A7A7A7F3C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0B6D54B-0C3C-4ED8-8AE6-E2A7A7A7F3C9}.Debug|x64.ActiveCfg = Debug|Any CPU

@@ -5,10 +5,8 @@ Edition** que o Ori Coop Plus já intercepta, sincroniza ou usa como alvo de
 ações. Ele separa o que foi confirmado pelo código do que ainda precisa de
 inspeção das DLLs do jogo ou de teste manual.
 
-O cliente legado foi removido. As entradas abaixo representam o histórico do
-mod e devem ser consideradas **a confirmar** até serem migradas para o plugin
-BepInEx. A cobertura atualmente ativa está limitada aos patches em
-`src/OriCoopPlus/OriCoopBepInEx/Patches`.
+A cobertura atualmente ativa está limitada aos patches em
+`src/OriCoopPlus/OriCoopBepInEx/Patches` e aos handlers do servidor dedicado.
 
 ## Legenda de cobertura
 
@@ -16,7 +14,7 @@ BepInEx. A cobertura atualmente ativa está limitada aos patches em
   sincronização ou aplicação correspondente.
 - **Reconhecido**: o tipo ou contrato aparece no código, mas não há catálogo
   nominal completo nem garantia de que todos os casos são sincronizados.
-- **A confirmar**: o comportamento depende de `Assembly-CSharp`, `WWClient` ou
+- **A confirmar**: o comportamento depende de `Assembly-CSharp` ou
   de uma execução dentro do jogo.
 - **Não implementado**: não há entrada específica localizada no código atual.
 
@@ -56,8 +54,8 @@ filtradas por `ShareStoryOnly` e devem ser confirmadas contra a DLL do jogo.
 
 Evidências:
 
-- `src/OriCoopPlus/OriCoopClient/Patches/AbilityPatches.cs`
-- `src/OriCoopPlus/OriCoopClient/MPGameManager.cs`
+- `src/OriCoopPlus/OriCoopBepInEx/Patches/`
+- `src/OriCoopPlus/OriCoopBepInEx/Plugin/OriCoopPlugin.cs`
 - `SYNC_ABILITY` em `src/OriCoopPlus/OriCoopShared/PacketType.cs`
 
 ### Uso de habilidades em jogadores remotos — Parcial
@@ -77,9 +75,9 @@ ou bosses aceitos por essas interfaces.
 
 Evidências:
 
-- `src/OriCoopPlus/OriCoopClient/Data/SeinSpiritMP.cs`
-- `src/OriCoopPlus/OriCoopClient/Data/SeinStompMP.cs`
-- `src/OriCoopPlus/OriCoopClient/Patches/OriPatches.cs`
+- `src/OriCoopPlus/OriCoopBepInEx/Patches/`
+- `src/OriCoopPlus/OriCoopBepInEx/Patches/`
+- `src/OriCoopPlus/OriCoopBepInEx/Patches/`
 
 ## Teleportes
 
@@ -89,14 +87,14 @@ Há três entradas para o mesmo recurso:
 
 | Entrada | Comportamento |
 | --- | --- |
-| Tecla `T` | **A confirmar**; não há handler no cliente BepInEx atual |
+| Tecla `T` | Escolhe o jogador remoto conhecido mais próximo e envia o pedido ao servidor |
 | Botão no HUD | **A confirmar**; não há HUD de teleporte no cliente BepInEx atual |
 | Comando `/tp <origem> <destino>` ou `/teleport` | O servidor envia ao jogador de origem a última posição conhecida do destino |
 
-O cliente prepara a cena de destino, posiciona `Characters.Sein`, atualiza
-câmera e cenas carregadas e mostra uma notificação. O recurso só funciona
-quando `AllowTeleport` está habilitado pelo servidor e o cliente tratar o
-pacote `TELEPORT_REQUEST`.
+O cliente posiciona `Characters.Sein` (ou `Sein` como fallback) e registra uma
+mensagem colorida. O recurso só funciona quando `AllowTeleport` está habilitado
+pelo servidor e há um snapshot recente do destino. A atualização de câmera e
+cenas carregadas ainda está **a confirmar**.
 
 Esse é um teleporte do mod entre jogadores. Não foi localizada uma entrada
 para pontos de teleporte, Spirit Wells, portais ou fast travel nativos do jogo.
@@ -105,9 +103,9 @@ até que sejam identificados nas assemblies ou em teste.
 
 Evidências:
 
-- `src/OriCoopPlus/OriCoopClient/MPGameManager.cs`
-- `src/OriCoopPlus/OriCoopClient/UI/CoopHUD.cs`
-- `src/OriCoopPlus/OriCoopServer/Commands/TeleportCmd.cs`
+- `src/OriCoopPlus/OriCoopBepInEx/Plugin/OriCoopPlugin.cs`
+- `src/OriCoopPlus/OriCoopBepInEx/Plugin/OriCoopPlugin.cs`
+- `src/OriCoopDedicatedServer/OriCoopDedicatedServer/Game/Commands/TeleportCmd.cs`
 - `src/OriCoopPlus/OriCoopShared/CoopConfig.cs`
 
 ## Inimigos e bosses
@@ -144,8 +142,8 @@ combate. A confirmação deve ser feita em jogo com `EntitySync` ativado.
 
 Evidências:
 
-- `src/OriCoopPlus/OriCoopClient/Patches/OriPatches.cs`
-- `src/OriCoopPlus/OriCoopClient/Sync/EntitySync.cs`
+- `src/OriCoopPlus/OriCoopBepInEx/Patches/`
+- `src/OriCoopPlus/OriCoopBepInEx/Patches/`
 
 ## Pickups e progresso
 
@@ -169,7 +167,7 @@ chama o método correspondente de `SeinPickupProcessor`.
 Esse inventário é uma entrada de progresso/coleta, não um catálogo de
 inimigos. O significado exato de cada pickup é o fornecido pelo jogo.
 
-Evidência: `src/OriCoopPlus/OriCoopClient/Data/SeinPickupMPProcessor.cs`.
+Evidência: `src/OriCoopPlus/OriCoopBepInEx/Patches/`.
 
 ## Mundo, portas e eventos
 
@@ -201,8 +199,8 @@ criado.
 
 Evidências:
 
-- `src/OriCoopPlus/OriCoopClient/Patches/WorldPatches.cs`
-- `src/OriCoopPlus/OriCoopClient/Sync/WorldSyncManager.cs`
+- `src/OriCoopPlus/OriCoopBepInEx/Patches/`
+- `src/OriCoopPlus/OriCoopBepInEx/Patches/`
 - `src/OriCoopPlus/OriCoopShared/PacketType.cs`
 
 ## Lacunas para a próxima etapa

@@ -6,13 +6,8 @@
 | --- | --- |
 | `src/OriCoopPlus/OriCoopBepInEx/Plugin/OriCoopPlugin.cs` | ponto de entrada BepInEx, configuracao e ciclo de vida |
 | `src/OriCoopPlus/OriCoopBepInEx/Domain/` | DTOs e contratos sem dependencia de Unity |
-| `src/OriCoopPlus/OriCoopBepInEx/Networking/NetworkService.cs` | adaptador para o protocolo UDP legado |
+| `src/OriCoopPlus/OriCoopBepInEx/Networking/NetworkService.cs` | transporte UDP do protocolo próprio |
 | `src/OriCoopPlus/OriCoopBepInEx/Patches/` | gatilhos Harmony e leitura do estado de Sein |
-| `src/OriCoopPlus/OriCoopServer/OriCoopServerModule.cs` | ponto de entrada do plugin servidor |
-| `src/OriCoopPlus/OriCoopServer/NetworkHandler.cs` | entrada e distribuicao de pacotes |
-| `src/OriCoopPlus/OriCoopServer/ServerConfig.cs` | estado e broadcast de configuracao |
-| `src/OriCoopPlus/OriCoopServer/Commands/` | comandos especificos do Ori |
-| `src/OriCoopPlus/OriCoopServer/DummyManager.cs` | bot e eventos de teste |
 | `src/OriCoopPlus/OriCoopShared/` | contrato cliente-servidor |
 
 ## Servidor dedicado próprio

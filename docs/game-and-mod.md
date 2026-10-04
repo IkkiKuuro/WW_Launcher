@@ -4,7 +4,7 @@
 
 O alvo documentado e **Ori and the Blind Forest: Definitive Edition** para
 Windows, instalado pela Steam. O jogo e Unity e fornece ao mod assemblies como
-`UnityEngine`, `UnityEngine.UI`, `WWClient` e `Assembly-CSharp`.
+`UnityEngine`, `UnityEngine.UI` e `Assembly-CSharp`.
 
 O multiplayer nao e uma conversao geral do jogo para multiplayer. Ele injeta um
 modulo no cliente existente e usa um servidor dedicado para distribuir estado.
@@ -75,4 +75,4 @@ variar conforme a versao do Unity; nao edite esse campo manualmente sem testar.
   funcionando; o README registra que alguns ainda nao estao.
 - Nao ha, nesta base, uma especificacao formal do estado completo de cada
   entidade do Ori. Antes de adicionar sincronizacao, capture o fluxo existente
-  em `NetworkHandler` e `MPGameManager`.
+  em `NetworkService` e `ServerHandle`.

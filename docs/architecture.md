@@ -16,15 +16,14 @@ OriCoopDedicatedServer.exe
 
 O projeto `OriCoopDedicatedServer` fornece uma infraestrutura própria: servidor
 UDP, clientes conectados, pacotes, eventos e comandos de console. As regras do
-Ori são compiladas no executável próprio; não existe dependência de
-`WWDedicatedServer.dll`, carregamento de `ServerModules` ou API do WW.
+Ori são compiladas no executável próprio; não existe dependência de servidor
+ou API de multiplayer externa.
 
 ## Projetos
 
 | Projeto | Target | Saida | Responsabilidade |
 | --- | --- | --- | --- |
 | `OriCoopBepInEx` | `.NET Framework 3.5` | `OriCoopBepInEx.dll` | scaffolding do plugin BepInEx 5.x |
-| `OriCoopServer` | `.NET 8.0` | `ORIDEServerModule.dll` | módulo compatível para integração e testes |
 | `OriCoopShared` | arquivos compartilhados | incorporado nos dois modulos | enums, configuracao e contrato comum |
 | `OriCoopDedicatedServer.Core` | `.NET 8.0` | `OriCoopDedicatedServer.Core.dll` | transporte UDP, ciclo de vida, API e console |
 | `OriCoopDedicatedServer` | `.NET 8.0` | `OriCoopDedicatedServer.exe` | servidor dedicado independente do WW |
@@ -35,8 +34,7 @@ quando a instalacao do jogo estiver em outro local.
 
 O novo scaffolding BepInEx esta documentado em
 [bepinex-architecture.md](bepinex-architecture.md). Ele e um projeto separado,
-com target estrito `net35`, e nao altera o cliente legado enquanto a migracao
-do servidor e do protocolo nao estiver concluida.
+com target estrito `net35`, conectado diretamente ao servidor dedicado próprio.
 
 ## Ciclo de inicializacao
 
@@ -44,7 +42,8 @@ do servidor e do protocolo nao estiver concluida.
 
 1. O BepInEx encontra `OriCoopBepInEx.dll` em `BepInEx\plugins`.
 2. `OriCoopPlugin.Awake` carrega a configuracao BepInEx.
-3. `NetworkService` registra callbacks do `WWClient` e tenta conectar ao servidor.
+3. `NetworkService` abre o UDP próprio e tenta conectar diretamente ao
+   `OriCoopDedicatedServer.exe`.
 4. Harmony aplica os patches do mod.
 5. `SeinCharacterPatch` envia snapshots de posicao e animacao.
 

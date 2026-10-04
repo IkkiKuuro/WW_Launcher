@@ -44,6 +44,7 @@ namespace OriCoopBepInEx.Domain
     public sealed class PlayerSnapshot
     {
         public int PlayerId;
+        public string Nick;
         public Vector3Data Position;
         public Vector2Data Velocity;
         public PlayerInputState Input;

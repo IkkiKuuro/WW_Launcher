@@ -22,10 +22,10 @@ Definitive Edition**. O mod possui um modulo cliente, carregado pelo jogo, e um
 modulo servidor, carregado pelo servidor dedicado. Eles devem ser colocados em
 pastas diferentes.
 
-O novo scaffolding do cliente usa BepInEx 5.x em
+O cliente próprio usa BepInEx 5.x em
 [`src/OriCoopPlus/OriCoopBepInEx`](src/OriCoopPlus/OriCoopBepInEx) e target
-estrito `.NET Framework 3.5`. Ele e mantido separado do cliente legado durante
-a migracao. Consulte
+estrito `.NET Framework 3.5`. O servidor próprio fica em
+[`src/OriCoopDedicatedServer`](src/OriCoopDedicatedServer). Consulte
 [docs/bepinex-architecture.md](docs/bepinex-architecture.md) antes de integrar
 novos pacotes ou patches.
 
@@ -85,15 +85,6 @@ OriCoopDedicatedServer.Core.dll
   de: src\OriCoopDedicatedServer\OriCoopDedicatedServer.Core\bin\Release\net8.0\
   para: <ORI_DIR>\Server\
 ```
-
-Se o launcher WW tiver instalado a versÃ£o antiga, remova tambÃ©m:
-
-```text
-<ORI_DIR>\ClientModules\ORIDEClientModule.dll
-```
-
-Esse cliente legado usa `MPGameManager`/`WWClient` e causa conflito com
-`OriCoopBepInEx.dll`. Os dois clientes nÃ£o devem ser instalados ao mesmo tempo.
 
 Copie tambem o servidor dedicado compilado para `<ORI_DIR>\Server\`. Para
 manter os arquivos correspondentes entre si, copie estes arquivos da pasta
@@ -186,13 +177,10 @@ manualmente.
 7. Para testar com outro computador, use o IP do computador que esta
    executando o servidor e libere a porta `7777` no firewall.
 
-O painel F8 e o spawn visual de jogadores remotos pertenciam ao cliente legado
-e foram removidos nesta migracao. O recebimento de snapshots e a aplicacao
-visual ainda estao **a confirmar**.
-
-O atalho `T` e o teleporte visual ainda nao estao implementados no cliente
-BepInEx atual. O servidor registra `/tp`, mas o cliente ainda precisa tratar o
-pacote `TELEPORT_REQUEST` para aplicar a posicao recebida.
+O plugin BepInEx fornece uma HUD própria no canto superior esquerdo, com nick,
+coordenadas e ping dos jogadores conhecidos. O atalho `T` e o comando `/tp`
+usam o pacote `TELEPORT_REQUEST`; a atualização de câmera e cenas carregadas
+após o teleporte ainda está **a confirmar**.
 
 Por seguranca, todas as opcoes cooperativas iniciam desligadas a cada
 inicializacao do servidor. Para usar um recurso, ative-o explicitamente pelos
@@ -256,8 +244,7 @@ Confirme que `OriCoopBepInEx.dll` foi colocado em:
 <ORI_DIR>\BepInEx\plugins\
 ```
 
-O servidor próprio não usa `ServerModules`; remova essa pasta se ela tiver sido
-criada por uma instalação antiga.
+O servidor próprio é executado diretamente por `OriCoopDedicatedServer.exe`.
 
 ### O patch nao envia snapshots
 

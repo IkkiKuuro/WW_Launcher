@@ -29,7 +29,7 @@ para outros jogos.
 
 Os fatos desta documentacao foram extraidos do README, dos projetos .NET e do
 codigo-fonte versionado. Quando um comportamento depende de assemblies do jogo
-(`UnityEngine`, `WWClient` ou `Assembly-CSharp`) ou de teste manual, ele esta
+(`UnityEngine` ou `Assembly-CSharp`) ou de teste manual, ele esta
 marcado como **a confirmar** em vez de ser apresentado como garantia.
 
 ## Projetos e jogos conhecidos

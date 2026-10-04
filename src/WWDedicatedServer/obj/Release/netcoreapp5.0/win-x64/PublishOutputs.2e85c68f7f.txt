@@ -1,5 +1,0 @@
-D:\SteamLibrary\steamapps\common\Ori DE\Server\WWDedicatedServer.exe
-D:\SteamLibrary\steamapps\common\Ori DE\Server\WWDedicatedServer.dll
-D:\SteamLibrary\steamapps\common\Ori DE\Server\WWDedicatedServer.deps.json
-D:\SteamLibrary\steamapps\common\Ori DE\Server\WWDedicatedServer.runtimeconfig.json
-D:\SteamLibrary\steamapps\common\Ori DE\Server\WWDedicatedServer.pdb

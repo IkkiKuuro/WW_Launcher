@@ -1,9 +1,0 @@
-LOG STARTED!
-[00:47:01] [INFO] [SERVER] Starting server...
-[00:47:02] [INFO] [SERVER] Server started on 7777 maxplayers: 2
-[00:47:02] [INFO] [SERVER] LAN address: 10.242.29.152:7777
-[00:47:02] [INFO] [SERVER] LAN address: 192.168.0.5:7777
-[00:47:02] [INFO] [SERVER] LAN address: 192.168.194.223:7777
-[00:47:02] [INFO] [SERVER] Use one of the IPv4 addresses above in the client's Network.Host setting.
-[00:47:02] [INFO] [MODULE_LOADER] MODULES PATH: C:\Users\irani\OneDrive\Documentos\GitHub\WW_Launcher\src\WWDedicatedServer\bin\Release\netcoreapp5.0\ServerModules
-[00:47:02] [INFO] [STOP] stooping server...

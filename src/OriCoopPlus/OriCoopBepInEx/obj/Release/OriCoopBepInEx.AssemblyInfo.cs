@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OriCoopBepInEx")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d56f9a5d18f76cc66bf069752d367d01aa7dc238")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2c08d0ed791f114b9306d1c359c8f3b4ff73fc99")]
 [assembly: System.Reflection.AssemblyProductAttribute("OriCoopBepInEx")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OriCoopBepInEx")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

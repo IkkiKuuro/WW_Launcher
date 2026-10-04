@@ -28,7 +28,6 @@ Saidas esperadas:
 
 ```text
 src\OriCoopPlus\OriCoopBepInEx\bin\Release\OriCoopBepInEx.dll
-src\OriCoopPlus\OriCoopServer\bin\Release\net8.0\ORIDEServerModule.dll
 src\OriCoopDedicatedServer\OriCoopDedicatedServer\bin\Release\net8.0\OriCoopDedicatedServer.exe
 ```
 
@@ -60,25 +59,12 @@ Com `<ORI_DIR>` apontando para a pasta do jogo:
 <ORI_DIR>\Server\OriCoopDedicatedServer.runtimeconfig.json
 ```
 
-O servidor próprio não usa `ServerModules`. Feche `OriDE.exe` e o servidor
-antes de substituir DLLs.
+Feche `OriDE.exe` e o servidor antes de substituir DLLs.
 
 Para instalar o plugin, copie essa DLL para
 `<ORI_DIR>\BepInEx\plugins\`. As DLLs `BepInEx.dll`, `0Harmony.dll` e
 `UnityEngine.dll` devem continuar sendo fornecidas pela instalação do jogo;
 nao copie referencias privadas para a pasta do plugin.
-
-Se o mod tiver sido instalado anteriormente pelo launcher WW, remova o cliente
-legado antes de iniciar o jogo:
-
-```powershell
-Remove-Item `
-  'D:\SteamLibrary\steamapps\common\Ori DE\ClientModules\ORIDEClientModule.dll' `
-  -Force -ErrorAction SilentlyContinue
-```
-
-O cliente legado usa `MPGameManager`/`WWClient` e nao pode coexistir com o
-plugin BepInEx. A pasta `ClientModules` pode permanecer vazia.
 
 ## Inicializacao
 
@@ -114,6 +100,7 @@ plugin BepInEx. A pasta `ClientModules` pode permanecer vazia.
    Host = 127.0.0.1
    Port = 7777
    PlayerId = -1
+   Nickname = Ori_Player
    ```
 
 8. Inicie o Ori pelo executável com BepInEx, carregue um save em que o
@@ -196,6 +183,8 @@ No computador de cada jogador, edite
 [Network]
 Host = 192.168.1.50
 Port = 7777
+PlayerId = -1
+Nickname = Ori_Player
 ```
 
 Substitua `192.168.1.50` pelo IPv4 exibido pelo servidor. O firewall do
@@ -203,6 +192,11 @@ computador que hospeda deve permitir trafego UDP de entrada na porta escolhida;
 nao e necessario abrir a porta no roteador quando todos estao na mesma rede
 local. A descoberta automatica de servidores ainda nao existe: os jogadores
 entram informando o IPv4 manualmente.
+
+O jogador se conecta exclusivamente ao executável
+`OriCoopDedicatedServer.exe`: basta iniciar o servidor, configurar `Host`,
+`Port` e `Nickname` no arquivo BepInEx e abrir o jogo com
+`OriCoopBepInEx.dll`.
 
 ## Comandos do mod
 
@@ -236,6 +230,15 @@ Use `/coop` sem argumentos para consultar o estado atual.
 6. Teste nome, cor, posicao, desconexao e reconexao.
 7. Ative uma opcao por vez e teste o efeito correspondente.
 8. Teste `/dummy` e remova o bot ao terminar.
+9. Com dois jogadores em uma cena controlavel, ative `/coop tp on`, aguarde
+   snapshots e pressione `T` em um cliente; confirme a mensagem colorida e a
+   mudanca de posicao. Depois teste `/tp <origem> <destino>` no console.
+10. Ative `entitysync` e confirme nos logs do cliente a recepcao da variavel
+    `ES`; a sincronizacao visual de entidades alem dos jogadores ainda esta
+    **a confirmar**.
+11. Confirme no canto superior esquerdo o HUD `ORI COOP PLUS`, com uma linha
+    por jogador contendo nick, coordenadas e ping. `--` indica que a primeira
+    resposta de ping ainda nao chegou.
 
 ### Scaffolding BepInEx
 
@@ -246,8 +249,8 @@ Use `/coop` sem argumentos para consultar o estado atual.
 3. Confirme que a secao `[Network]` foi criada em
    `<ORI_DIR>\BepInEx\config\com.ikkikuuro.oricoop.cfg`.
 4. Confirme que o jogo permanece carregando sem excecao de Harmony.
-5. A recepcao e aplicação visual de jogadores remotos e a compatibilidade com
-   o servidor legado ainda estao **a confirmar**.
+5. A recepcao e aplicação visual de jogadores remotos ainda estao **a confirmar**
+   contra a versão instalada do jogo.
 6. Para um teste LAN, inicie o dedicado, anote `LAN address`, configure esse
    IPv4 em dois clientes e confirme que ambos enviam pacotes ao mesmo servidor.
 
@@ -255,8 +258,7 @@ Use `/coop` sem argumentos para consultar o estado atual.
 
 | Sintoma | Verificacoes |
 | --- | --- |
-| Janela `NullReferenceException` em `WWClient.ClientSend.SendData` ou `MPGameManager.Send` | Remova `ClientModules\ORIDEClientModule.dll`; esse e o cliente legado instalado pelo launcher WW |
-| Erro sobre `UnityEngine`, `WWClient` ou `Assembly-CSharp` | Confirme as DLLs do jogo e do BepInEx; o plugin deve estar em `BepInEx\plugins` |
+| Erro sobre `UnityEngine` ou `Assembly-CSharp` | Confirme as DLLs do jogo e do BepInEx; o plugin deve estar em `BepInEx\plugins` |
 | F8 nao abre | save controlavel, DLL correta, reinicio do jogo e log de carregamento |
 | Jogador sem nome | cliente/servidor da mesma versao e `/coop names on` |
 | Teleporte indisponivel | use `/coop tp on`, mantenha dois jogadores conectados e aguarde snapshots; `T` teleporta para o remoto mais proximo e `/tp <origem> <destino>` continua disponivel |

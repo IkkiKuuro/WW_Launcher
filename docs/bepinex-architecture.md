@@ -36,15 +36,24 @@ nomes de `SeinCharacter.FixedUpdate`, `SeinInput.Update`, `Velocity`,
 `CurrentAnimation` e `FaceLeft` ainda precisam ser confirmados no runtime da
 versao instalada.
 
+O plugin tambem desenha um HUD proprio no canto superior esquerdo usando
+`OnGUI`, sem depender de um Canvas do jogo. Cada linha mostra nick,
+coordenadas recebidas e ping de ida e volta medido pelo pacote `-7`.
+
 ## Contrato inicial
 
-`NetworkService` agora implementa diretamente o transporte UDP e os pacotes legados
+`NetworkService` implementa diretamente o transporte UDP e os pacotes próprios
 `POSITION`, `ANIM` e mensagens `-5`, alem do pedido/resposta
 `TELEPORT_REQUEST` e da variavel `ES`, mantendo compatibilidade inicial com
 `OriCoopShared/PacketType.cs` e `NetworkHandler.cs`. O snapshot de domínio
 continua mais rico que o payload atual; velocidade e inputs ainda não são
-serializados pelo servidor legado e estão **a confirmar** para a próxima
+serializados pelo servidor dedicado e estão **a confirmar** para a próxima
 versão do protocolo.
+
+O cliente BepInEx conecta diretamente ao `OriCoopDedicatedServer.exe`. Depois
+de receber seu ID, envia o nick configurado em `[Network] Nickname`; essa
+confirmação ativa o slot no servidor. O fluxo não instancia componentes externos
+de multiplayer.
 
 ## Compatibilidade
 
