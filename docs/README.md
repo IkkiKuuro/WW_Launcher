@@ -16,6 +16,9 @@ para outros jogos.
   diagnosticar uma instancia.
 - Use [mapa do codigo](code-map.md) para localizar rapidamente as classes
   principais.
+- Use [mapa de entradas do jogo](game-entry-map.md) para consultar habilidades,
+  teleporte, pickups, alvos de combate, portas, alavancas e lacunas de
+  cobertura.
 
 ## Escopo e confiabilidade
 
